@@ -34,7 +34,7 @@ VSVersionInfo(
         StringStruct(u'FileDescription', u'Silly Passwords'),
         StringStruct(u'FileVersion', u'1.0.0.0'),
         StringStruct(u'InternalName', u'Silly Passwords'),
-        StringStruct(u'LegalCopyright', u'The Unlicense.'),
+        StringStruct(u'LegalCopyright', u'GPL-3.0.'),
         StringStruct(u'OriginalFilename', u'Silly Passwords.exe'),
         StringStruct(u'ProductName', u'Silly Passwords'),
         StringStruct(u'ProductVersion', u'1.0.0.0')])
