@@ -175,8 +175,9 @@ class PasswordGenerator(QWidget):
             self.show_info_popup('Please select at least one character set.')
             return
 
-        selected_chars = ''.join(secrets.SystemRandom().sample(selected_chars, min(length, len(selected_chars))))
-        password = ''.join(secrets.SystemRandom().sample(selected_chars, min(length, len(selected_chars))))
+        selected_chars *= (length // len(selected_chars)) + 1
+
+        password = ''.join(secrets.SystemRandom().sample(selected_chars, length))
         self.password_output.setText(password)
 
         if update_length_display:
