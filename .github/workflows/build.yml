@@ -1,0 +1,42 @@
+name: Build Silly Passwords On Windows
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Src/**'
+      - 'Assets/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4.1.1
+
+    - name: Set up Python
+      uses: actions/setup-python@v4.7.1
+      with:
+        python-version: 3.12.0
+
+    - name: Install Python dependencies
+      run: |
+        pip install -r requirements.txt
+      working-directory: ${{ github.workspace }}
+
+    - name: Build Silly Passwords
+      run: |
+        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Raubtier.ico" --name "Silly Passwords" --version-file "Extra/versionfile.txt" --add-data "Assets;Assets/"  "Src/main.py"
+
+    - name: Move Assets folder
+      run: |
+        mv dist/Silly Passwords/_internal/Assets dist/Silly Passwords/
+      shell: bash
+
+    - name: Upload Silly Passwords
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: Silly Passwords
+        path: dist/Silly Passwords
