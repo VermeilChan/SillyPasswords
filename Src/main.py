@@ -47,7 +47,6 @@ class PasswordGenerator(QWidget):
         self.length_display = QLabel(str(self.DEFAULT_PASSWORD_LENGTH))
         self.generate_button = QPushButton('Generate', toolTip='Generate a password.')
         self.copy_button = QPushButton('Copy', toolTip='Copy the generated password to the clipboard.')
-        self.strength_label = QLabel('Strength: ')
         self.uppercase_checkbox = QCheckBox('ABC', toolTip='Include uppercase letters in the password.')
         self.uppercase_checkbox.setChecked(True)
         self.lowercase_checkbox = QCheckBox('abc', toolTip='Include lowercase letters in the password.')
@@ -68,7 +67,6 @@ class PasswordGenerator(QWidget):
         layout.addWidget(self.password_label)
         layout.addWidget(self.password_output)
         layout.addWidget(self.copy_button)
-        layout.addWidget(self.strength_label)
 
         char_sets_layout = QHBoxLayout()
         char_sets_group_box = QGroupBox('Characters used:')
