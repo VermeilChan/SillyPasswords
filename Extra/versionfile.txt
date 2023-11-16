@@ -31,12 +31,12 @@ VSVersionInfo(
       StringTable(
         u'040904B0',
         [StringStruct(u'CompanyName', u'Vermeil'),
-        StringStruct(u'FileDescription', u'Silly PassWords'),
+        StringStruct(u'FileDescription', u'Silly Passwords'),
         StringStruct(u'FileVersion', u'1.0.0.0'),
-        StringStruct(u'InternalName', u'Silly PassWords'),
+        StringStruct(u'InternalName', u'Silly Passwords'),
         StringStruct(u'LegalCopyright', u'The Unlicense.'),
-        StringStruct(u'OriginalFilename', u'Silly PassWords.exe'),
-        StringStruct(u'ProductName', u'Silly PassWords'),
+        StringStruct(u'OriginalFilename', u'Silly Passwords.exe'),
+        StringStruct(u'ProductName', u'Silly Passwords'),
         StringStruct(u'ProductVersion', u'1.0.0.0')])
       ]), 
     VarFileInfo([VarStruct(u'Translation', [0, 1200, 1033, 1252])])
