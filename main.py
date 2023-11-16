@@ -197,7 +197,6 @@ class PasswordGenerator(QWidget):
         info_popup.exec()
 
 
-
 def main():
     app = QApplication(sys.argv)
     global generator_instance
