@@ -95,7 +95,7 @@ class PasswordGenerator(QWidget):
 
     def set_window_properties(self):
         self.setGeometry(300, 300, 400, 300)
-        self.setWindowTitle('Password Generator')
+        self.setWindowTitle('SillyPasswords')
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
         font = QFont("Space Grotesk", 12)
@@ -165,6 +165,14 @@ class PasswordGenerator(QWidget):
     def generate_password(self, update_length_display=True):
         length = self.length_slider.value()
 
+        if not (
+            self.uppercase_checkbox.isChecked()
+            or self.lowercase_checkbox.isChecked()
+            or self.numbers_checkbox.isChecked()
+            or self.symbols_checkbox.isChecked()
+        ):
+            self.uppercase_checkbox.setChecked(True)
+
         selected_chars = ''
         if self.uppercase_checkbox.isChecked():
             selected_chars += string.ascii_uppercase
@@ -179,7 +187,8 @@ class PasswordGenerator(QWidget):
             self.show_info_popup('Please select at least one character set.')
             return
 
-        password = ''.join(secrets.choice(selected_chars) for _ in range(length))
+        selected_chars = ''.join(secrets.SystemRandom().sample(selected_chars, len(selected_chars)))
+        password = secrets.token_urlsafe(length)
         self.password_output.setText(password)
 
         if update_length_display:
@@ -189,10 +198,12 @@ class PasswordGenerator(QWidget):
         self.password_strength_calculator.update_strength_label(strength)
 
         if length < 16 and not self.info_popup_shown:
-            self.show_info_popup('It is generally good to make your passwords at least 16 characters long.')
+            self.show_info_popup('its good to make your passwords at least 16 characters long or more.')
             self.info_popup_shown = True
 
+        self.show_password_checkbox.setChecked(True)
         self.show_password_checkbox.setVisible(True)
+        self.toggle_password_visibility()
 
     def toggle_password_visibility(self):
         echo_mode = QLineEdit.EchoMode.Normal if self.show_password_checkbox.isChecked() else QLineEdit.EchoMode.Password
@@ -207,7 +218,7 @@ class PasswordGenerator(QWidget):
         info_popup = QMessageBox(self)
         info_popup.setIcon(QMessageBox.Icon.Information)
         info_popup.setText(message)
-        info_popup.setWindowTitle('Information')
+        info_popup.setWindowTitle('SillyPasswords')
         info_popup.exec()
 
 
@@ -215,11 +226,11 @@ class PasswordStrengthCalculator:
     def calculate_password_strength(self, password):
         weights = {
             'lowercase': 0.2,
-            'uppercase': 0.3,
-            'digit': 0.5,
+            'uppercase': 0.5,
+            'digit': 0.3,
             'symbol': 0.7,
-            'length': 0.7,
-            'charset_bonus': 0.5,
+            'length': 1.0,
+            'charset_bonus': 0.4,
         }
 
         lowercase_strength = any(char in string.ascii_lowercase for char in password)
@@ -244,7 +255,30 @@ class PasswordStrengthCalculator:
 
     def update_strength_label(self, strength):
         strength_percentage = int(strength * 100)
-        strength_text = f'<font color="#4d04a6">Strength:</font> {strength_percentage}% (Basic Calculation, Its Really Bad 💀)'
+
+        color_stops = [100, 75, 50, 25, 10]
+        colors = ['#00FF00', '#FFFF00', '#FFA500', '#FF0000', '#8B4513']
+
+        if strength_percentage > 100:
+            interpolated_color = colors[0]
+        else:
+            color_index = next((i for i, stop in enumerate(color_stops) if strength_percentage >= stop), len(color_stops) - 1)
+            lower_stop = color_stops[color_index - 1]
+            upper_stop = color_stops[color_index]
+            lower_color = colors[color_index - 1]
+            upper_color = colors[color_index]
+            interpolation_factor = (strength_percentage - lower_stop) / (upper_stop - lower_stop)
+
+            def interpolate_color(c1, c2, factor):
+                return tuple(int((1 - factor) * c1[i] + factor * c2[i]) for i in range(3))
+
+            interpolated_color = '#%02x%02x%02x' % interpolate_color(
+                tuple(int(lower_color[i:i + 2], 16) for i in (1, 3, 5)),
+                tuple(int(upper_color[i:i + 2], 16) for i in (1, 3, 5)),
+                interpolation_factor
+            )
+
+        strength_text = f'<font color="{interpolated_color}">Strength:</font> {strength_percentage}% (Basic Calculation, Its Really Bad 💀)'
         generator_instance.strength_label.setText(strength_text)
         generator_instance.strength_label.setObjectName("password_strength_label")
 
