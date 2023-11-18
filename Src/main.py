@@ -17,13 +17,19 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QHBoxLayout,
     QGroupBox,
+    QFormLayout,
 )
+
+
+class CheckboxState:
+    CHECKED = Qt.CheckState.Checked
+    UNCHECKED = Qt.CheckState.Unchecked
 
 
 class PasswordGenerator(QWidget):
     MIN_PASSWORD_LENGTH = 1
     MAX_PASSWORD_LENGTH = 512
-    DEFAULT_PASSWORD_LENGTH = 16
+    DEFAULT_PASSWORD_LENGTH = 24
     PASSWORD_CHARS = string.ascii_letters + string.digits + string.punctuation
 
     def __init__(self):
@@ -44,7 +50,7 @@ class PasswordGenerator(QWidget):
         self.length_slider = QSlider(Qt.Orientation.Horizontal)
         self.length_slider.setRange(self.MIN_PASSWORD_LENGTH, self.MAX_PASSWORD_LENGTH)
         self.length_slider.setValue(self.DEFAULT_PASSWORD_LENGTH)
-        self.length_display = QLabel(str(self.DEFAULT_PASSWORD_LENGTH))
+        self.length_display = QLabel(f"{self.DEFAULT_PASSWORD_LENGTH}")
         self.generate_button = QPushButton('Generate', toolTip='Generate a password.')
         self.copy_button = QPushButton('Copy', toolTip='Copy the generated password to the clipboard.')
         self.uppercase_checkbox = QCheckBox('ABC', toolTip='Include uppercase letters in the password.')
@@ -58,24 +64,29 @@ class PasswordGenerator(QWidget):
 
     def setup_layout(self):
         layout = QVBoxLayout(self)
+
         grid_layout = QGridLayout()
         grid_layout.addWidget(self.length_label, 0, 0)
         grid_layout.addWidget(self.length_slider, 0, 1)
         grid_layout.addWidget(self.length_display, 0, 2)
         layout.addLayout(grid_layout)
-        layout.addWidget(self.generate_button)
+
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.generate_button)
+        button_layout.addWidget(self.copy_button)
+        layout.addLayout(button_layout)
+
         layout.addWidget(self.password_label)
         layout.addWidget(self.password_output)
-        layout.addWidget(self.copy_button)
 
-        char_sets_layout = QHBoxLayout()
+        char_sets_layout = QFormLayout()
         char_sets_group_box = QGroupBox('Characters used:')
         char_sets_group_layout = QVBoxLayout(char_sets_group_box)
         char_sets_group_layout.addWidget(self.uppercase_checkbox)
         char_sets_group_layout.addWidget(self.lowercase_checkbox)
         char_sets_group_layout.addWidget(self.numbers_checkbox)
         char_sets_group_layout.addWidget(self.symbols_checkbox)
-        char_sets_layout.addWidget(char_sets_group_box)
+        char_sets_layout.addRow(char_sets_group_box)
         layout.addLayout(char_sets_layout)
 
         layout.setSpacing(10)
@@ -97,13 +108,13 @@ class PasswordGenerator(QWidget):
         font = QFont("Space Grotesk", 16)
         self.setFont(font)
 
-        stylesheet = """
-            QWidget {
+        stylesheet = f"""
+            QWidget {{
                 background-color: #262626;
                 color: #f0f0f0;
-            }
+            }}
 
-            QPushButton {
+            QPushButton {{
                 background-color: #6706e0;
                 color: #ffffff;
                 border: 1px solid #4d04a6;
@@ -111,45 +122,45 @@ class PasswordGenerator(QWidget):
                 font-size: 14px;
                 min-width: 100px;
                 border-radius: 4px;
-            }
+            }}
 
-            QPushButton:hover {
+            QPushButton:hover {{
                 background-color: #4a049f;
-            }
+            }}
 
-            QSlider {
+            QSlider {{
                 background-color: #262626;
-            }
+            }}
 
-            QSlider::handle:horizontal {
+            QSlider::handle:horizontal {{
                 background: #6706e0;
                 border: 1px solid #6706e0;
                 width: 18px;
                 margin: -2px 0;
                 border-radius: 4px;
-            }
+            }}
 
-            QLabel {
+            QLabel {{
                 font-size: 14px;
-            }
+            }}
 
-            QLineEdit, QCheckBox {
+            QLineEdit, QCheckBox {{
                 background-color: #333333;
                 border: 1px solid #444444;
                 padding: 8px;
                 font-size: 14px;
                 color: #f0f0f0;
                 border-radius: 4px;
-            }
+            }}
 
-            QLineEdit:focus, QCheckBox:focus {
+            QLineEdit:focus, QCheckBox:focus {{
                 border: 2px solid #4d04a6;
-            }
+            }}
 
-            QMessageBox {
+            QMessageBox {{
                 background-color: #262626;
                 color: #f0f0f0;
-            }
+            }}
         """
 
         self.setStyleSheet(stylesheet)
@@ -162,26 +173,24 @@ class PasswordGenerator(QWidget):
         length = self.length_slider.value()
 
         selected_chars = ''
-        if self.uppercase_checkbox.isChecked():
-            selected_chars += string.ascii_uppercase
-        if self.lowercase_checkbox.isChecked():
-            selected_chars += string.ascii_lowercase
-        if self.numbers_checkbox.isChecked():
-            selected_chars += string.digits
-        if self.symbols_checkbox.isChecked():
-            selected_chars += string.punctuation
+        for checkbox, char_set in zip(
+            [self.uppercase_checkbox, self.lowercase_checkbox, self.numbers_checkbox, self.symbols_checkbox],
+            [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
+        ):
+            if checkbox.checkState() == CheckboxState.CHECKED:
+                selected_chars += char_set
 
         if not selected_chars:
             self.show_info_popup('Please select at least one character set.')
             return
 
-        selected_chars *= (length // len(selected_chars)) + 1
+        random_bytes = secrets.token_bytes(length)
+        password = ''.join(selected_chars[i % len(selected_chars)] for i in random_bytes)
 
-        password = ''.join(secrets.SystemRandom().sample(selected_chars, length))
         self.password_output.setText(password)
 
         if update_length_display:
-            self.length_display.setText(str(length))
+            self.length_display.setText(f"{length}")
 
     def copy_password(self):
         clipboard = QApplication.clipboard()
