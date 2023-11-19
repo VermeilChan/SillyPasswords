@@ -43,6 +43,7 @@ jobs:
       shell: bash
 
     - name: Archive SillyPasswords folder
+    - uses: edgarrc/action-7z@v1
       run: |
         7z a -t7z -mx=9 -m0=LZMA2 -mmt=on -ms=64m -mfb=64 -md=64m -ms=64m -mqs -mqs=on -sfb=16g dist/SillyPasswords-1.x.x-x64-win.7z dist/SillyPasswords
       shell: bash
