@@ -1,0 +1,58 @@
+name: Build and Release SillyPasswords
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12.0
+
+    - name: Create virtualenv
+      run: |
+        python -m venv venv
+        source venv/Scripts/activate
+
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+
+    - name: Download and Install UPX
+      run: |
+        wget https://github.com/upx/upx/releases/download/v4.2.1/upx-4.2.1-win64.zip
+        unzip upx-4.2.1-win64.zip
+        mv upx-4.2.1-win64 upx
+        mv upx Extra/
+
+    - name: Build SillyPasswords with pyinstaller
+      run: pyinstaller --noconfirm --onedir --windowed --icon "Assets/Raubtier.ico" --name "SillyPasswords" --upx-dir "Extra/upx" --clean --version-file "Extra/fileversion.txt" --add-data "Src/about.py;." --add-data "Src/constants.py;." --add-data "Src/gui.py;." --add-data "Src/password_generator.py;." --add-data "Src/themes.py;." --add-data "Assets;Assets/"  "Src/main.py"
+
+    - name: Remove Raubtier
+      run: rm dist/SillyPasswords/_internal/Assets/Raubtier.gif
+
+    - name: Move Assets folder
+      run: |
+        mkdir -p dist/SillyPasswords
+        mv dist/SillyPasswords/_internal/Assets dist/SillyPasswords/
+
+    - name: Archive SillyPasswords folder
+      run: |
+        7z a -t7z -mx=9 -m0=LZMA2 -mmt=on -ms=64m -mfb=64 -md=64m -ms=64m -mqs -mqs=on -sfb=16g dist/SillyPasswords-1.x.x-x64-win.7z dist/SillyPasswords
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/SillyPasswords-1.x.x-x64-win.7z
+        prerelease: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
