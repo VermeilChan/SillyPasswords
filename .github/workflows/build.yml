@@ -42,25 +42,16 @@ jobs:
         mv dist/SillyPasswords/_internal/Assets dist/SillyPasswords/
       shell: bash
 
-    - name: Download and Install 7-Zip
-      run: |
-        Invoke-WebRequest -Uri https://7-zip.org/a/7z2301-x64.msi -OutFile 7z.msi
-
-        Start-Process msiexec.exe -ArgumentList "/i 7z.msi /quiet /qn /norestart" -Wait
-
-        $env:Path += ';C:\Program Files\7-Zip'
-
-        7z --version
-
     - name: Archive SillyPasswords
       run: |
-        7z a -t7z -mx=9 -m0=LZMA2 -mmt=on -ms=64m -mfb=64 -md=64m -ms=64m -mqs -mqs=on -sfb=16g dist/SillyPasswords-1.x.x-x64-win.7z dist/SillyPasswords
+        tar --create --xz --verbose --options=lzma,lc=1,lp=0,pb=0 --file=dist/SillyPasswords-1.x.x-x64-win.tar.xz -C dist SillyPasswords
+      shell: bash
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/SillyPasswords-1.x.x-x64-win.7z
+        files: dist/SillyPasswords-1.x.x-x64-win.tar.xz
         prerelease: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
