@@ -18,13 +18,16 @@ jobs:
       with:
         python-version: 3.12.0
 
+    - name: Install virtualenv
+      run: pip install virtualenv
+
     - name: Create virtualenv
       run: |
-        python -m venv venv
+        virtualenv venv
         source venv/Scripts/activate
 
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install PyQt6 pyinstaller
 
     - name: Download and Install UPX
       run: |
@@ -33,7 +36,7 @@ jobs:
         mv upx-4.2.1-win64 upx
         mv upx Extra/
 
-    - name: Build SillyPasswords with pyinstaller
+    - name: Build SillyPasswords
       run: pyinstaller --noconfirm --onedir --windowed --icon "Assets/Raubtier.ico" --name "SillyPasswords" --upx-dir "Extra/upx" --clean --version-file "Extra/fileversion.txt" --add-data "Src/about.py;." --add-data "Src/constants.py;." --add-data "Src/gui.py;." --add-data "Src/password_generator.py;." --add-data "Src/themes.py;." --add-data "Assets;Assets/"  "Src/main.py"
 
     - name: Remove Raubtier
