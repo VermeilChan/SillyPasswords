@@ -23,7 +23,7 @@ jobs:
 
     - name: Download and Install UPX
       run: |
-        wget https://github.com/upx/upx/releases/download/v4.2.1/upx-4.2.1-win64.zip
+        curl -LO https://github.com/upx/upx/releases/download/v4.2.1/upx-4.2.1-win64.zip
         unzip upx-4.2.1-win64.zip
         mv upx-4.2.1-win64 upx
         mv upx Extra/
