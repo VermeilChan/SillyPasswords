@@ -27,21 +27,25 @@ jobs:
         unzip upx-4.2.1-win64.zip
         mv upx-4.2.1-win64 upx
         mv upx Extra/
+      shell: bash
 
     - name: Build SillyPasswords
       run: pyinstaller --noconfirm --onedir --windowed --icon "Assets/Raubtier.ico" --name "SillyPasswords" --upx-dir "Extra/upx" --clean --version-file "Extra/fileversion.txt" --add-data "Src/about.py;." --add-data "Src/constants.py;." --add-data "Src/gui.py;." --add-data "Src/password_generator.py;." --add-data "Src/themes.py;." --add-data "Assets;Assets/"  "Src/main.py"
 
     - name: Remove Raubtier
       run: rm dist/SillyPasswords/_internal/Assets/Raubtier.gif
+      shell: bash
 
     - name: Move Assets folder
       run: |
         mkdir -p dist/SillyPasswords
         mv dist/SillyPasswords/_internal/Assets dist/SillyPasswords/
+       shell: bash
 
     - name: Archive SillyPasswords folder
       run: |
         7z a -t7z -mx=9 -m0=LZMA2 -mmt=on -ms=64m -mfb=64 -md=64m -ms=64m -mqs -mqs=on -sfb=16g dist/SillyPasswords-1.x.x-x64-win.7z dist/SillyPasswords
+      shell: bash
 
     - name: Create Release
       id: create_release
