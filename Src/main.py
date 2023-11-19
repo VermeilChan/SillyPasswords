@@ -1,12 +1,13 @@
 import sys
-import secrets
 import string
+import secrets
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QFont
+from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtWidgets import (
-    QApplication,
     QWidget,
+    QApplication,
+    QMainWindow,
     QVBoxLayout,
     QLabel,
     QLineEdit,
@@ -20,18 +21,82 @@ from PyQt6.QtWidgets import (
     QFormLayout,
 )
 
+from themes import light_theme, dark_theme
 
 class CheckboxState:
     CHECKED = Qt.CheckState.Checked
     UNCHECKED = Qt.CheckState.Unchecked
 
 
-class PasswordGenerator(QWidget):
+class PasswordGeneratorLogic:
+    DEFAULT_PASSWORD_LENGTH = 24
     MIN_PASSWORD_LENGTH = 1
     MAX_PASSWORD_LENGTH = 512
-    DEFAULT_PASSWORD_LENGTH = 24
     PASSWORD_CHARS = string.ascii_letters + string.digits + string.punctuation
 
+    def __init__(self, ui):
+        self.ui = ui
+        self.ui.generate_button.clicked.connect(self.generate_password)
+        self.ui.length_slider.valueChanged.connect(self.update_password_and_length_display)
+        self.ui.copy_button.clicked.connect(self.copy_password)
+        self.ui.uppercase_checkbox.stateChanged.connect(self.generate_password)
+        self.ui.lowercase_checkbox.stateChanged.connect(self.generate_password)
+        self.ui.numbers_checkbox.stateChanged.connect(self.generate_password)
+        self.ui.symbols_checkbox.stateChanged.connect(self.generate_password)
+        self.ui.theme_menu_toggle.triggered.connect(self.toggle_theme)
+
+        self.ui.setStyleSheet(dark_theme)
+        self.ui.theme_menu_toggle.setText('Light Mode')
+
+    def update_password_and_length_display(self):
+        self.generate_password(update_length_display=True)
+
+    def generate_password(self, update_length_display=True):
+        length = self.ui.length_slider.value()
+
+        selected_chars = ''
+        for checkbox, char_set in zip(
+            [self.ui.uppercase_checkbox, self.ui.lowercase_checkbox, self.ui.numbers_checkbox, self.ui.symbols_checkbox],
+            [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
+        ):
+            if checkbox.checkState() == CheckboxState.CHECKED:
+                selected_chars += char_set
+
+        if not selected_chars:
+            self.show_info_popup('Please select at least one character set.')
+            return
+
+        random_bytes = secrets.token_bytes(length)
+        password = ''.join(selected_chars[i % len(selected_chars)] for i in random_bytes)
+
+        self.ui.password_output.setText(password)
+
+        if update_length_display:
+            self.ui.length_display.setText(f"{length}")
+
+    def copy_password(self):
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.ui.password_output.text())
+        self.show_info_popup('Password copied to clipboard.')
+
+    def show_info_popup(self, message):
+        info_popup = QMessageBox(self.ui)
+        info_popup.setIcon(QMessageBox.Icon.Information)
+        info_popup.setText(message)
+        info_popup.setWindowTitle('SillyPasswords')
+        info_popup.exec()
+
+    def toggle_theme(self):
+        current_stylesheet = self.ui.styleSheet()
+        if current_stylesheet == light_theme:
+            self.ui.setStyleSheet(dark_theme)
+            self.ui.theme_menu_toggle.setText('Light Mode')
+        else:
+            self.ui.setStyleSheet(light_theme)
+            self.ui.theme_menu_toggle.setText('Dark Mode')
+
+
+class PasswordGeneratorUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.init_ui()
@@ -39,18 +104,19 @@ class PasswordGenerator(QWidget):
     def init_ui(self):
         self.create_widgets()
         self.setup_layout()
-        self.connect_signals()
         self.set_window_properties()
+
+        self.logic = PasswordGeneratorLogic(self)
 
     def create_widgets(self):
         self.password_label = QLabel('Password:')
         self.password_output = QLineEdit()
         self.password_output.setEchoMode(QLineEdit.EchoMode.Normal)
-        self.length_label = QLabel('Length:')
+        self.length_label = QLabel('Password Length:')
         self.length_slider = QSlider(Qt.Orientation.Horizontal)
-        self.length_slider.setRange(self.MIN_PASSWORD_LENGTH, self.MAX_PASSWORD_LENGTH)
-        self.length_slider.setValue(self.DEFAULT_PASSWORD_LENGTH)
-        self.length_display = QLabel(f"{self.DEFAULT_PASSWORD_LENGTH}")
+        self.length_slider.setRange(PasswordGeneratorLogic.MIN_PASSWORD_LENGTH, PasswordGeneratorLogic.MAX_PASSWORD_LENGTH)
+        self.length_slider.setValue(PasswordGeneratorLogic.DEFAULT_PASSWORD_LENGTH)
+        self.length_display = QLabel(f"{PasswordGeneratorLogic.DEFAULT_PASSWORD_LENGTH}")
         self.generate_button = QPushButton('Generate', toolTip='Generate a password.')
         self.copy_button = QPushButton('Copy', toolTip='Copy the generated password to the clipboard.')
         self.uppercase_checkbox = QCheckBox('ABC', toolTip='Include uppercase letters in the password.')
@@ -59,11 +125,20 @@ class PasswordGenerator(QWidget):
         self.lowercase_checkbox.setChecked(True)
         self.numbers_checkbox = QCheckBox('123', toolTip='Include numbers in the password.')
         self.numbers_checkbox.setChecked(True)
-        self.symbols_checkbox = QCheckBox('&#%', toolTip='Include symbols in the password.')
+        self.symbols_checkbox = QCheckBox('$#%', toolTip='Include symbols in the password.')
         self.symbols_checkbox.setChecked(True)
 
+        menubar = self.menuBar()
+        theme_menu = menubar.addMenu('Appearance')
+
+        self.theme_menu_toggle = QAction('Dark Mode', self)
+        self.theme_menu_toggle.setStatusTip('Toggle between dark and light modes.')
+        theme_menu.addAction(self.theme_menu_toggle)
+
     def setup_layout(self):
-        layout = QVBoxLayout(self)
+        central_widget = QWidget(self)
+
+        layout = QVBoxLayout(central_widget)
 
         grid_layout = QGridLayout()
         grid_layout.addWidget(self.length_label, 0, 0)
@@ -89,128 +164,23 @@ class PasswordGenerator(QWidget):
         char_sets_layout.addRow(char_sets_group_box)
         layout.addLayout(char_sets_layout)
 
-        layout.setSpacing(10)
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
-    def connect_signals(self):
-        self.generate_button.clicked.connect(self.generate_password)
-        self.length_slider.valueChanged.connect(self.update_password_and_length_display)
-        self.copy_button.clicked.connect(self.copy_password)
-        self.uppercase_checkbox.stateChanged.connect(self.generate_password)
-        self.lowercase_checkbox.stateChanged.connect(self.generate_password)
-        self.numbers_checkbox.stateChanged.connect(self.generate_password)
-        self.symbols_checkbox.stateChanged.connect(self.generate_password)
+        layout.setSpacing(10)
 
     def set_window_properties(self):
         self.setGeometry(300, 300, 400, 300)
         self.setWindowTitle('SillyPasswords')
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
-        font = QFont("Space Grotesk", 16)
-        self.setFont(font)
-
-        stylesheet = f"""
-            QWidget {{
-                background-color: #262626;
-                color: #f0f0f0;
-            }}
-
-            QPushButton {{
-                background-color: #6706e0;
-                color: #ffffff;
-                border: 1px solid #4d04a6;
-                padding: 8px 16px;
-                font-size: 14px;
-                min-width: 100px;
-                border-radius: 4px;
-            }}
-
-            QPushButton:hover {{
-                background-color: #4a049f;
-            }}
-
-            QSlider {{
-                background-color: #262626;
-            }}
-
-            QSlider::handle:horizontal {{
-                background: #6706e0;
-                border: 1px solid #6706e0;
-                width: 18px;
-                margin: -2px 0;
-                border-radius: 4px;
-            }}
-
-            QLabel {{
-                font-size: 14px;
-            }}
-
-            QLineEdit, QCheckBox {{
-                background-color: #333333;
-                border: 1px solid #444444;
-                padding: 8px;
-                font-size: 14px;
-                color: #f0f0f0;
-                border-radius: 4px;
-            }}
-
-            QLineEdit:focus, QCheckBox:focus {{
-                border: 2px solid #4d04a6;
-            }}
-
-            QMessageBox {{
-                background-color: #262626;
-                color: #f0f0f0;
-            }}
-        """
-
-        self.setStyleSheet(stylesheet)
-        self.show()
-
-    def update_password_and_length_display(self):
-        self.generate_password(update_length_display=True)
-
-    def generate_password(self, update_length_display=True):
-        length = self.length_slider.value()
-
-        selected_chars = ''
-        for checkbox, char_set in zip(
-            [self.uppercase_checkbox, self.lowercase_checkbox, self.numbers_checkbox, self.symbols_checkbox],
-            [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
-        ):
-            if checkbox.checkState() == CheckboxState.CHECKED:
-                selected_chars += char_set
-
-        if not selected_chars:
-            self.show_info_popup('Please select at least one character set.')
-            return
-
-        random_bytes = secrets.token_bytes(length)
-        password = ''.join(selected_chars[i % len(selected_chars)] for i in random_bytes)
-
-        self.password_output.setText(password)
-
-        if update_length_display:
-            self.length_display.setText(f"{length}")
-
-    def copy_password(self):
-        clipboard = QApplication.clipboard()
-        clipboard.setText(self.password_output.text())
-        self.show_info_popup('Password copied to clipboard.')
-
-    def show_info_popup(self, message):
-        info_popup = QMessageBox(self)
-        info_popup.setIcon(QMessageBox.Icon.Information)
-        info_popup.setText(message)
-        info_popup.setWindowTitle('SillyPasswords')
-        info_popup.exec()
 
 
 def main():
     app = QApplication(sys.argv)
-    global generator_instance
-    generator_instance = PasswordGenerator()
+    generator_instance = PasswordGeneratorUI()
+    generator_instance.show()
     sys.exit(app.exec())
-
 
 if __name__ == '__main__':
     main()
