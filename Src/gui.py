@@ -60,10 +60,10 @@ class PasswordGeneratorUI(QMainWindow):
         self.theme_menu_toggle.setStatusTip('Toggle between dark and light modes.')
         theme_menu.addAction(self.theme_menu_toggle)
 
-        about_menu = menubar.addMenu('About SillyPasswords')
+        about_menu = menubar.addMenu('Help')
 
         about_action = QAction('About', self)
-        about_action.setStatusTip('About SillyPasswords')
+        about_action.setStatusTip('Help')
         about_action.triggered.connect(self.show_about_dialog)
 
         about_menu.addAction(about_action)
