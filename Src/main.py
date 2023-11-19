@@ -2,8 +2,8 @@ import sys
 import string
 import secrets
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtGui import QIcon, QAction, QPixmap, QDesktopServices
 from PyQt6.QtWidgets import (
     QWidget,
     QApplication,
@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 from themes import light_theme, dark_theme
+
 
 class CheckboxState:
     CHECKED = Qt.CheckState.Checked
@@ -47,6 +48,8 @@ class PasswordGeneratorLogic:
 
         self.ui.setStyleSheet(dark_theme)
         self.ui.theme_menu_toggle.setText('Light Mode')
+
+        self.about_dialog = None
 
     def update_password_and_length_display(self):
         self.generate_password(update_length_display=True)
@@ -88,12 +91,75 @@ class PasswordGeneratorLogic:
 
     def toggle_theme(self):
         current_stylesheet = self.ui.styleSheet()
+
         if current_stylesheet == light_theme:
             self.ui.setStyleSheet(dark_theme)
             self.ui.theme_menu_toggle.setText('Light Mode')
         else:
             self.ui.setStyleSheet(light_theme)
             self.ui.theme_menu_toggle.setText('Dark Mode')
+
+        if self.about_dialog:
+            self.about_dialog.update_theme()
+
+
+class AboutSillyPasswords(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('About SillyPasswords')
+        self.setGeometry(400, 200, 300, 200)
+
+        self.init_ui()
+
+    def init_ui(self):
+        central_widget = QWidget(self)
+
+        layout = QVBoxLayout(central_widget)
+
+        self.logo_label = QLabel(self)
+        self.logo_pixmap = QPixmap('Assets/Raubtier.png')
+        self.logo_label.setPixmap(self.logo_pixmap)
+        layout.addWidget(self.logo_label)
+
+        self.name_version_label = QLabel('SillyPasswords v1.0.3 (x64)', self)
+        layout.addWidget(self.name_version_label)
+
+        self.license_label = QLabel('GPL-3.0 License', self)
+        layout.addWidget(self.license_label)
+
+        self.description_label = QLabel('Free And Open Source Forever!', self)
+        layout.addWidget(self.description_label)
+
+        self.repo_button = QPushButton('GitHub Repository', self)
+        self.repo_button.clicked.connect(self.open_repo)
+        layout.addWidget(self.repo_button)
+
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+        self.setStyleSheet(dark_theme)
+
+    def open_repo(self):
+        QDesktopServices.openUrl(QUrl('https://github.com/VermeilChan/SillyPasswords'))
+
+    def update_theme(self):
+        current_stylesheet = self.styleSheet()
+
+        if current_stylesheet == light_theme:
+            self.setStyleSheet(dark_theme)
+            self.logo_label.setStyleSheet(dark_theme)
+            self.name_version_label.setStyleSheet(dark_theme)
+            self.license_label.setStyleSheet(dark_theme)
+            self.description_label.setStyleSheet(dark_theme)
+            self.repo_button.setStyleSheet(dark_theme)
+        else:
+            self.setStyleSheet(light_theme)
+            self.logo_label.setStyleSheet(light_theme)
+            self.name_version_label.setStyleSheet(light_theme)
+            self.license_label.setStyleSheet(light_theme)
+            self.description_label.setStyleSheet(light_theme)
+            self.repo_button.setStyleSheet(light_theme)
 
 
 class PasswordGeneratorUI(QMainWindow):
@@ -129,11 +195,26 @@ class PasswordGeneratorUI(QMainWindow):
         self.symbols_checkbox.setChecked(True)
 
         menubar = self.menuBar()
+
         theme_menu = menubar.addMenu('Appearance')
 
         self.theme_menu_toggle = QAction('Dark Mode', self)
         self.theme_menu_toggle.setStatusTip('Toggle between dark and light modes.')
         theme_menu.addAction(self.theme_menu_toggle)
+
+        about_menu = menubar.addMenu('About SillyPasswords')
+
+        about_action = QAction('About', self)
+        about_action.setStatusTip('About SillyPasswords')
+        about_action.triggered.connect(self.show_about_dialog)
+
+        about_menu.addAction(about_action)
+
+    def show_about_dialog(self):
+        if not self.logic.about_dialog:
+            self.logic.about_dialog = AboutSillyPasswords()
+
+        self.logic.about_dialog.show()
 
     def setup_layout(self):
         central_widget = QWidget(self)
