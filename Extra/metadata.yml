@@ -1,11 +1,11 @@
 CompanyName: VermeilChan
-FileDescription: Simple Password Generator Written In Python
-FileVersion: 1.0.3.0
+FileDescription: Password Generator
+FileVersion: 1.0.4.0
 InternalName: SillyPasswords
 LegalCopyright: GPL-3.0.
 OriginalFilename: SillyPasswords.exe
 ProductName: SillyPasswords
-ProductVersion: 1.0.3.0
+ProductVersion: 1.0.4.0
 Translation:
   - langID: 0
     charsetID: 1200
