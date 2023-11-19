@@ -1,4 +1,4 @@
-# Silly Passwords
+# SillyPasswords
 
 <p align="center">
   <a href="https://github.com/VermeilChan/SillyPasswords">
@@ -42,7 +42,7 @@ This is a simple password generator written in Python. The tool allows you to ge
 
 - Generates random passwords with specified length.
 - Includes uppercase and lowercase letters, numbers, and special characters.
-- Easy-to-use user interface.
+- Easy-to-use and lightweight user interface.
 
 ## License
 
@@ -50,7 +50,8 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ## Acknowledgments
 
-- [PyQt6](https://www.riverbankcomputing.com)
-- [SNK Corporation](https://www.snk-corp.co.jp)
+- [PyQt6](https://www.riverbankcomputing.com): GUI Library
+- [SNK Corporation](https://www.snk-corp.co.jp): Program Icon
+- [UPX](https://upx.github.io): Compressed Binary Packages
 
 Feel free to contribute or report issues!
