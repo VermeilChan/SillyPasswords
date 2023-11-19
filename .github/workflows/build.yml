@@ -18,14 +18,6 @@ jobs:
       with:
         python-version: 3.12.0
 
-    - name: Install virtualenv
-      run: pip install virtualenv
-
-    - name: Create virtualenv
-      run: |
-        virtualenv venv
-        source venv/Scripts/activate
-
     - name: Install Python dependencies
       run: pip install PyQt6 pyinstaller
 
