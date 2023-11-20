@@ -23,7 +23,7 @@ class AboutSillyPasswords(QMainWindow):
         self.logo_label.setPixmap(self.logo_pixmap)
         layout.addWidget(self.logo_label)
 
-        self.name_version_label = QLabel('SillyPasswords v1.0.4 (x64)', self)
+        self.name_version_label = QLabel('SillyPasswords v1.0.5 (x64)', self)
         layout.addWidget(self.name_version_label)
 
         self.license_label = QLabel('GPL-3.0 License', self)
