@@ -19,7 +19,7 @@ class AboutSillyPasswords(QMainWindow):
         layout = QVBoxLayout(central_widget)
 
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('Assets/Raubtier.png')
+        self.logo_pixmap = QPixmap('Assets/Raubtier.ico')
         self.logo_label.setPixmap(self.logo_pixmap)
         layout.addWidget(self.logo_label)
 
