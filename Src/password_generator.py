@@ -58,15 +58,21 @@ class PasswordGeneratorLogic:
             self.ui.length_display.setText(f"{length}")
 
     def copy_password(self):
+        password = self.ui.password_output.text()
+        if not password:
+            self.show_info_popup('No password generated. Please generate a password first.')
+            return
+
         clipboard = QApplication.clipboard()
-        clipboard.setText(self.ui.password_output.text())
+        clipboard.setText(password)
         self.show_info_popup('Password copied to clipboard.')
 
     def show_info_popup(self, message):
-        with QMessageBox(self.ui) as info_popup:
-            info_popup.setIcon(QMessageBox.Icon.Information)
-            info_popup.setText(message)
-            info_popup.setWindowTitle('SillyPasswords')
+        info_popup = QMessageBox(self.ui)
+        info_popup.setIcon(QMessageBox.Icon.Information)
+        info_popup.setText(message)
+        info_popup.setWindowTitle('SillyPasswords')
+        info_popup.exec()
 
     def toggle_theme(self):
         current_stylesheet = self.ui.styleSheet()
@@ -77,7 +83,6 @@ class PasswordGeneratorLogic:
         else:
             self.ui.setStyleSheet(dark_theme)
             self.ui.theme_menu_toggle.setText('Light Mode')
-
 
         if self.about_dialog:
             self.about_dialog.update_theme()
