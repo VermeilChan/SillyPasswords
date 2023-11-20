@@ -1,4 +1,4 @@
-name: Build and Release SillyPasswords
+name: Build and Upload SillyPasswords
 
 on:
   push:
