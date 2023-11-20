@@ -2,7 +2,7 @@ from PyQt6.QtCore import QUrl
 from PyQt6.QtGui import QDesktopServices, QPixmap, QIcon
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
 
-from themes import dark_theme, light_theme
+from themes import dark_theme
 
 class AboutSillyPasswords(QMainWindow):
     def __init__(self):
@@ -39,33 +39,15 @@ class AboutSillyPasswords(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
-        self.setStyleSheet(light_theme)
-        self.logo_label.setStyleSheet(light_theme)
-        self.name_version_label.setStyleSheet(light_theme)
-        self.license_label.setStyleSheet(light_theme)
-        self.description_label.setStyleSheet(light_theme)
-        self.repo_button.setStyleSheet(light_theme)
+        self.setStyleSheet(dark_theme)
+        self.logo_label.setStyleSheet(dark_theme)
+        self.name_version_label.setStyleSheet(dark_theme)
+        self.license_label.setStyleSheet(dark_theme)
+        self.description_label.setStyleSheet(dark_theme)
+        self.repo_button.setStyleSheet(dark_theme)
 
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
 
     def open_repo(self):
         QDesktopServices.openUrl(QUrl('https://github.com/VermeilChan/SillyPasswords'))
-
-    def update_theme(self):
-        current_stylesheet = self.styleSheet()
-
-        if current_stylesheet == light_theme:
-            self.setStyleSheet(dark_theme)
-            self.logo_label.setStyleSheet(dark_theme)
-            self.name_version_label.setStyleSheet(dark_theme)
-            self.license_label.setStyleSheet(dark_theme)
-            self.description_label.setStyleSheet(dark_theme)
-            self.repo_button.setStyleSheet(dark_theme)
-        else:
-            self.setStyleSheet(light_theme)
-            self.logo_label.setStyleSheet(light_theme)
-            self.name_version_label.setStyleSheet(light_theme)
-            self.license_label.setStyleSheet(light_theme)
-            self.description_label.setStyleSheet(light_theme)
-            self.repo_button.setStyleSheet(light_theme)

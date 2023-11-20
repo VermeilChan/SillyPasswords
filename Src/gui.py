@@ -18,8 +18,6 @@ from PyQt6.QtWidgets import (
 from about import AboutSillyPasswords
 from password_generator import PasswordGeneratorLogic
 
-from constants import THEME_DARK
-
 class PasswordGeneratorUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -53,12 +51,6 @@ class PasswordGeneratorUI(QMainWindow):
         self.symbols_checkbox.setChecked(True)
 
         menubar = self.menuBar()
-
-        theme_menu = menubar.addMenu('Appearance')
-
-        self.theme_menu_toggle = QAction(THEME_DARK, self)
-        self.theme_menu_toggle.setStatusTip('Toggle between dark and light modes.')
-        theme_menu.addAction(self.theme_menu_toggle)
 
         about_menu = menubar.addMenu('Help')
 
@@ -113,3 +105,5 @@ class PasswordGeneratorUI(QMainWindow):
         self.setWindowTitle('SillyPasswords')
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
+
+        self.setStyleSheet('Dark Mode')

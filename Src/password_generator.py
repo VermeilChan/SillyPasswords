@@ -3,7 +3,7 @@ import secrets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMessageBox
 
-from themes import light_theme, dark_theme
+from themes import dark_theme
 
 class CheckboxState:
     CHECKED = Qt.CheckState.Checked
@@ -24,10 +24,8 @@ class PasswordGeneratorLogic:
         self.ui.lowercase_checkbox.stateChanged.connect(self.generate_password)
         self.ui.numbers_checkbox.stateChanged.connect(self.generate_password)
         self.ui.symbols_checkbox.stateChanged.connect(self.generate_password)
-        self.ui.theme_menu_toggle.triggered.connect(self.toggle_theme)
 
-        self.ui.setStyleSheet(light_theme)
-        self.ui.theme_menu_toggle.setText('Light Mode')
+        self.ui.setStyleSheet(dark_theme)
 
         self.about_dialog = None
 
@@ -73,16 +71,3 @@ class PasswordGeneratorLogic:
         info_popup.setText(message)
         info_popup.setWindowTitle('SillyPasswords')
         info_popup.exec()
-
-    def toggle_theme(self):
-        current_stylesheet = self.ui.styleSheet()
-
-        if current_stylesheet == dark_theme:
-            self.ui.setStyleSheet(light_theme)
-            self.ui.theme_menu_toggle.setText('Dark Mode')
-        else:
-            self.ui.setStyleSheet(dark_theme)
-            self.ui.theme_menu_toggle.setText('Light Mode')
-
-        if self.about_dialog:
-            self.about_dialog.update_theme()
