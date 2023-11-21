@@ -1,5 +1,7 @@
+import random
 import string
 import secrets
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMessageBox
 
@@ -46,6 +48,8 @@ class PasswordGeneratorLogic:
         if not selected_chars:
             self.show_info_popup('Please select at least one character set.')
             return
+
+        selected_chars = ''.join(random.sample(selected_chars, len(selected_chars)))
 
         random_bytes = secrets.token_bytes(length)
         password = ''.join(selected_chars[i % len(selected_chars)] for i in random_bytes)
