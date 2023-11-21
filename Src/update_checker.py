@@ -1,8 +1,9 @@
-import requests
+import urllib.request
+import json
 
 GITHUB_OWNER = 'VermeilChan'
 GITHUB_REPO = 'SillyPasswords'
-CURRENT_VERSION = 'v1.0.4'
+CURRENT_VERSION = 'v1.0.5'
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.6045.159 Safari/537.36'
 
 def check_for_updates():
@@ -38,20 +39,21 @@ def get_latest_version():
 
     try:
         response = make_github_api_request(headers)
-        release_data = response.json()
+        release_data = json.loads(response)
         latest_version = release_data['tag_name']
         return latest_version, None
-    except requests.exceptions.RequestException as req_error:
-        return None, f"Request error: {req_error}"
+    except urllib.error.URLError as url_error:
+        return None, f"URL error: {url_error}"
     except ValueError as json_error:
         return None, f"JSON decoding error: {json_error}"
 
 def make_github_api_request(headers):
     try:
-        response = requests.get(f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest', headers=headers)
-        response.raise_for_status()
-        return response
-    except requests.exceptions.RequestException as req_error:
-        raise req_error
+        url = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest'
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req) as response:
+            return response.read().decode('utf-8')
+    except urllib.error.URLError as url_error:
+        raise url_error
 
 check_for_updates()
