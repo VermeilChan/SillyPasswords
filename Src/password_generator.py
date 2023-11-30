@@ -1,4 +1,3 @@
-import random
 import string
 import secrets
 
@@ -49,12 +48,9 @@ class PasswordGeneratorLogic:
             self.show_info_popup('Please select at least one character set.')
             return
 
-        selected_chars = ''.join(random.sample(selected_chars, len(selected_chars)))
+        selected_chars = ''.join(secrets.choice(selected_chars) for _ in range(length))
 
-        random_bytes = secrets.token_bytes(length)
-        password = ''.join(selected_chars[i % len(selected_chars)] for i in random_bytes)
-
-        self.ui.password_output.setText(password)
+        self.ui.password_output.setText(selected_chars)
 
         if update_length_display:
             self.ui.length_display.setText(f"{length}")
