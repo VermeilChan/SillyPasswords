@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButt
 
 from themes import dark_theme
 
-class AboutSillyPasswords(QMainWindow):
+class About(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -40,11 +40,6 @@ class AboutSillyPasswords(QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.setStyleSheet(dark_theme)
-        self.logo_label.setStyleSheet(dark_theme)
-        self.name_version_label.setStyleSheet(dark_theme)
-        self.license_label.setStyleSheet(dark_theme)
-        self.description_label.setStyleSheet(dark_theme)
-        self.repo_button.setStyleSheet(dark_theme)
 
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
