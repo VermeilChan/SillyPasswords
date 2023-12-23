@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/VermeilChan/SillyPasswords">
-    <img src="Assets/Raubtier.gif" height="300" width="200" alt="Logo">
+    <img src="Assets/Raubtier.gif" height="162" width="126" alt="Logo">
   </a>
 </p>
 
@@ -34,6 +34,15 @@
   </a>
 </p>
 
+If you have a GitHub account and have found this repository helpful, please consider starring ★ it.
+
+## Table of contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [License](#license)
+- [Credits](#credits)
+
 ## Overview
 
 This is a simple password generator written in Python. The tool allows you to generate strong and secure passwords with customizable options.
@@ -48,10 +57,10 @@ This is a simple password generator written in Python. The tool allows you to ge
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
-## Acknowledgments
+## Credits
 
-- [PyQt6](https://www.riverbankcomputing.com): GUI Library
-- [SNK Corporation](https://www.snk-corp.co.jp): Program Icon
-- [UPX](https://upx.github.io): Compressed Binary Packages
+- [PyQt6](https://www.riverbankcomputing.com)
+- [SNK Corporation](https://www.snk-corp.co.jp)
+- [UPX](https://upx.github.io)
 
 Feel free to contribute or report issues!
