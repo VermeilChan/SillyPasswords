@@ -15,7 +15,8 @@ from PyQt6.QtWidgets import (
     QFormLayout,
 )
 
-from about import AboutSillyPasswords
+from about import About
+from themes import dark_theme
 from password_generator import PasswordGeneratorLogic
 
 class PasswordGeneratorUI(QMainWindow):
@@ -62,7 +63,7 @@ class PasswordGeneratorUI(QMainWindow):
 
     def show_about_dialog(self):
         if not self.logic.about_dialog:
-            self.logic.about_dialog = AboutSillyPasswords()
+            self.logic.about_dialog = About()
 
         self.logic.about_dialog.show()
 
@@ -106,4 +107,4 @@ class PasswordGeneratorUI(QMainWindow):
         icon_path = 'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
 
-        self.setStyleSheet('Dark Mode')
+        self.setStyleSheet(dark_theme)
