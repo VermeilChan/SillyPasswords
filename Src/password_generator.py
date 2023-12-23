@@ -11,10 +11,10 @@ class CheckboxState:
     UNCHECKED = Qt.CheckState.Unchecked
 
 class PasswordGeneratorLogic:
-    DEFAULT_PASSWORD_LENGTH = 24
+    DEFAULT_PASSWORD_LENGTH = 12
     MIN_PASSWORD_LENGTH = 1
-    MAX_PASSWORD_LENGTH = 512
-    PASSWORD_CHARS = string.ascii_letters + string.digits + string.punctuation
+    MAX_PASSWORD_LENGTH = 4096
+    PASSWORD_CHARACTERS = string.ascii_letters + string.digits + string.punctuation
 
     def __init__(self, ui):
         self.ui = ui
