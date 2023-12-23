@@ -23,16 +23,16 @@ class About(QMainWindow):
         self.logo_label.setPixmap(self.logo_pixmap)
         layout.addWidget(self.logo_label)
 
-        self.name_version_label = QLabel('SillyPasswords v1.0.6 Stable (x64) ⚡️', self)
+        self.name_version_label = QLabel('SillyPasswords v1.0.6 Stable (x64)', self)
         layout.addWidget(self.name_version_label)
 
-        self.license_label = QLabel('GPL-3.0 License 📜', self)
+        self.license_label = QLabel('GPL-3.0 License', self)
         layout.addWidget(self.license_label)
 
-        self.description_label = QLabel('Free And Open Source 🌐', self)
+        self.description_label = QLabel('Free And Open Source', self)
         layout.addWidget(self.description_label)
 
-        self.repo_button = QPushButton('GitHub Repository 🚀', self)
+        self.repo_button = QPushButton('GitHub Repository', self)
         self.repo_button.clicked.connect(self.open_repo)
         layout.addWidget(self.repo_button)
 
