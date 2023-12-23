@@ -1,6 +1,12 @@
-from PyQt6.QtCore import QUrl
-from PyQt6.QtGui import QDesktopServices, QPixmap, QIcon
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt6.QtCore import QUrl, QSize
+from PyQt6.QtGui import QDesktopServices, QIcon, QMovie
+from PyQt6.QtWidgets import (
+    QMainWindow,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+    QLabel,
+)
 
 from themes import dark_theme
 
@@ -19,8 +25,10 @@ class About(QMainWindow):
         layout = QVBoxLayout(central_widget)
 
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('Assets/Raubtier.ico')
-        self.logo_label.setPixmap(self.logo_pixmap)
+        self.logo_movie = QMovie('Assets/Raubtier.gif')
+        self.logo_movie.setScaledSize(QSize(126, 162))
+        self.logo_label.setMovie(self.logo_movie)
+        self.logo_movie.start()
         layout.addWidget(self.logo_label)
 
         self.name_version_label = QLabel('SillyPasswords v1.0.6 Stable (x64)', self)
