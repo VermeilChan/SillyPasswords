@@ -3,8 +3,8 @@ import json
 
 GITHUB_OWNER = 'VermeilChan'
 GITHUB_REPO = 'SillyPasswords'
-CURRENT_VERSION = 'v1.0.5'
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.56 Safari/537.36'
+CURRENT_VERSION = 'v1.0.6'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.129 Safari/537.36'
 
 def check_for_updates():
     print("Checking for updates...")
