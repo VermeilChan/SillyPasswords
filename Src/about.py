@@ -1,10 +1,11 @@
-from PyQt6.QtCore import QUrl, QSize
-from PyQt6.QtGui import QDesktopServices, QIcon, QMovie
+from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QMovie, QIcon
 from PyQt6.QtWidgets import (
+    QHBoxLayout,
     QMainWindow,
     QVBoxLayout,
-    QPushButton,
-    QWidget,
+    QGroupBox,
+    QDialog,
     QLabel,
 )
 
@@ -14,43 +15,48 @@ class About(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Help')
-        self.setGeometry(400, 200, 300, 200)
-
         self.init_ui()
 
     def init_ui(self):
-        central_widget = QWidget(self)
+        about_dialog = QDialog(self)
+        about_dialog.setWindowTitle(f"About")
 
-        layout = QVBoxLayout(central_widget)
+        layout = QVBoxLayout()
 
-        self.logo_label = QLabel(self)
-        self.logo_movie = QMovie('Assets/Raubtier.gif')
-        self.logo_movie.setScaledSize(QSize(126, 162))
-        self.logo_label.setMovie(self.logo_movie)
-        self.logo_movie.start()
-        layout.addWidget(self.logo_label)
+        top_left_layout = QHBoxLayout()
 
-        self.name_version_label = QLabel('SillyPasswords v1.0.6 Stable (x64)', self)
-        layout.addWidget(self.name_version_label)
+        icon_label = QLabel()
+        movie = QMovie(f"Assets/Raubtier.gif")
+        movie.setScaledSize(QSize(84, 108))
+        icon_label.setMovie(movie)
+        movie.start()
+        top_left_layout.addWidget(icon_label)
 
-        self.license_label = QLabel('GPL-3.0 License', self)
-        layout.addWidget(self.license_label)
+        metadata_layout = QVBoxLayout()
+        metadata_layout.addWidget(QLabel(f"SillyPasswords (64-bit)"))
+        metadata_layout.addWidget(QLabel(f"GPL-3.0 License"))
+        
+        github_link_label = QLabel('<a href="https://github.com/VermeilChan/SillyPasswords">GitHub Repository</a>')
+        github_link_label.setOpenExternalLinks(True)
+        metadata_layout.addWidget(github_link_label)
 
-        self.description_label = QLabel('Free And Open Source', self)
-        layout.addWidget(self.description_label)
+        top_left_layout.addLayout(metadata_layout)
+        layout.addLayout(top_left_layout)
 
-        self.repo_button = QPushButton('GitHub Repository', self)
-        self.repo_button.clicked.connect(self.open_repo)
-        layout.addWidget(self.repo_button)
+        build_info_box = QGroupBox(f"Build Information")
+        build_info_layout = QVBoxLayout()
 
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
+        build_info_layout.addWidget(QLabel(f"Version: 1.0.6 (X)"))
+        build_info_layout.addWidget(QLabel(f"Pyinstaller: 6.3.0"))
+        build_info_layout.addWidget(QLabel(f"PyQt6: 6.6.1"))
+        build_info_layout.addWidget(QLabel(f"Build date: Dec 24 2023"))
 
         self.setStyleSheet(dark_theme)
-
-        icon_path = 'Assets/Raubtier.ico'
+        icon_path = f'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
 
-    def open_repo(self):
-        QDesktopServices.openUrl(QUrl('https://github.com/VermeilChan/SillyPasswords'))
+        build_info_box.setLayout(build_info_layout)
+        layout.addWidget(build_info_box)
+
+        about_dialog.setLayout(layout)
+        about_dialog.exec()

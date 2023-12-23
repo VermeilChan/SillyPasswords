@@ -45,7 +45,7 @@ class PasswordGeneratorLogic:
                 selected_chars += char_set
 
         if not selected_chars:
-            self.show_info_popup('Please select at least one character set.')
+            self.show_info_popup(f'Please select at least one character set.')
             return
 
         selected_chars = ''.join(secrets.choice(selected_chars) for _ in range(length))
@@ -58,16 +58,16 @@ class PasswordGeneratorLogic:
     def copy_password(self):
         password = self.ui.password_output.text()
         if not password:
-            self.show_info_popup('No password generated. Please generate a password first.')
+            self.show_info_popup(f'No password generated. Please generate a password first.')
             return
 
         clipboard = QApplication.clipboard()
         clipboard.setText(password)
-        self.show_info_popup('Password copied to clipboard.')
+        self.show_info_popup(f'Password copied to clipboard.')
 
     def show_info_popup(self, message):
         info_popup = QMessageBox(self.ui)
         info_popup.setIcon(QMessageBox.Icon.Information)
         info_popup.setText(message)
-        info_popup.setWindowTitle('SillyPasswords')
+        info_popup.setWindowTitle(f'SillyPasswords')
         info_popup.exec()
