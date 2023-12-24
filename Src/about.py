@@ -1,3 +1,5 @@
+import platform
+
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QMovie, QIcon
 from PyQt6.QtWidgets import (
@@ -31,7 +33,7 @@ class About(QDialog):
         metadata_layout = QVBoxLayout()
         metadata_layout.addWidget(QLabel(f"SillyPasswords (64-bit)"))
         metadata_layout.addWidget(QLabel(f"GPL-3.0 License"))
-        
+
         github_link_label = QLabel('<a href="https://github.com/VermeilChan/SillyPasswords">GitHub Repository</a>')
         github_link_label.setOpenExternalLinks(True)
         metadata_layout.addWidget(github_link_label)
@@ -42,10 +44,19 @@ class About(QDialog):
         build_info_box = QGroupBox(f"Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel(f"Version: 1.0.6 (b8df5a9)"))
+        build_info_layout.addWidget(QLabel(f"Version: 1.0.6 (X)"))
         build_info_layout.addWidget(QLabel(f"Pyinstaller: 6.3.0"))
         build_info_layout.addWidget(QLabel(f"PyQt6: 6.6.1"))
         build_info_layout.addWidget(QLabel(f"Build date: Dec 24 2023"))
+
+        os_info_box = QGroupBox(f"Operating System")
+        os_info_layout = QVBoxLayout()
+
+        os_info_layout.addWidget(QLabel(f"OS: {platform.system()}"))
+        os_info_layout.addWidget(QLabel(f"Version: {platform.version()}"))
+
+        os_info_box.setLayout(os_info_layout)
+        layout.addWidget(os_info_box)
 
         icon_path = f'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
