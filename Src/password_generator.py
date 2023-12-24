@@ -4,8 +4,6 @@ import secrets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMessageBox
 
-from themes import dark_theme
-
 class CheckboxState:
     CHECKED = Qt.CheckState.Checked
     UNCHECKED = Qt.CheckState.Unchecked
@@ -26,8 +24,6 @@ class PasswordGeneratorLogic:
         self.ui.numbers_checkbox.stateChanged.connect(self.generate_password)
         self.ui.symbols_checkbox.stateChanged.connect(self.generate_password)
 
-        self.ui.setStyleSheet(dark_theme)
-
         self.about_dialog = None
 
     def update_password_and_length_display(self):
@@ -36,21 +32,21 @@ class PasswordGeneratorLogic:
     def generate_password(self, update_length_display=True):
         length = self.ui.length_slider.value()
 
-        selected_chars = ''
+        selected_characters = ''
         for checkbox, char_set in zip(
             [self.ui.uppercase_checkbox, self.ui.lowercase_checkbox, self.ui.numbers_checkbox, self.ui.symbols_checkbox],
             [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
         ):
             if checkbox.checkState() == CheckboxState.CHECKED:
-                selected_chars += char_set
+                selected_characters += char_set
 
-        if not selected_chars:
+        if not selected_characters:
             self.show_info_popup(f'Please select at least one character set.')
             return
 
-        selected_chars = ''.join(secrets.choice(selected_chars) for _ in range(length))
+        selected_characters = ''.join(secrets.choice(selected_characters) for _ in range(length))
 
-        self.ui.password_output.setText(selected_chars)
+        self.ui.password_output.setText(selected_characters)
 
         if update_length_display:
             self.ui.length_display.setText(f"{length}")

@@ -8,8 +8,6 @@ from PyQt6.QtWidgets import (
     QLabel,
 )
 
-from themes import dark_theme
-
 class About(QDialog):
     def __init__(self):
         super().__init__()
@@ -44,12 +42,11 @@ class About(QDialog):
         build_info_box = QGroupBox(f"Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel(f"Version: 1.0.6 (X)"))
+        build_info_layout.addWidget(QLabel(f"Version: 1.0.6 (b8df5a9)"))
         build_info_layout.addWidget(QLabel(f"Pyinstaller: 6.3.0"))
         build_info_layout.addWidget(QLabel(f"PyQt6: 6.6.1"))
         build_info_layout.addWidget(QLabel(f"Build date: Dec 24 2023"))
 
-        self.setStyleSheet(dark_theme)
         icon_path = f'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
 

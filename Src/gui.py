@@ -16,7 +16,6 @@ from PyQt6.QtWidgets import (
 )
 
 from about import About
-from themes import dark_theme
 from password_generator import PasswordGeneratorLogic
 
 class PasswordGeneratorUI(QMainWindow):
@@ -106,5 +105,3 @@ class PasswordGeneratorUI(QMainWindow):
         self.setWindowTitle(f'SillyPasswords')
         icon_path = f'Assets/Raubtier.ico'
         self.setWindowIcon(QIcon(icon_path))
-
-        self.setStyleSheet(dark_theme)
