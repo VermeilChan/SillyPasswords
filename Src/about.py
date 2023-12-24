@@ -2,7 +2,6 @@ from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QMovie, QIcon
 from PyQt6.QtWidgets import (
     QHBoxLayout,
-    QMainWindow,
     QVBoxLayout,
     QGroupBox,
     QDialog,
@@ -11,15 +10,14 @@ from PyQt6.QtWidgets import (
 
 from themes import dark_theme
 
-class About(QMainWindow):
+class About(QDialog):
     def __init__(self):
         super().__init__()
 
         self.init_ui()
 
     def init_ui(self):
-        about_dialog = QDialog(self)
-        about_dialog.setWindowTitle(f"About")
+        self.setWindowTitle(f"About")
 
         layout = QVBoxLayout()
 
@@ -58,5 +56,4 @@ class About(QMainWindow):
         build_info_box.setLayout(build_info_layout)
         layout.addWidget(build_info_box)
 
-        about_dialog.setLayout(layout)
-        about_dialog.exec()
+        self.setLayout(layout)
