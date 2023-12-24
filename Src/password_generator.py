@@ -33,12 +33,12 @@ class PasswordGeneratorLogic:
         length = self.ui.length_slider.value()
 
         selected_characters = ''
-        for checkbox, char_set in zip(
+        for checkbox, character_set in zip(
             [self.ui.uppercase_checkbox, self.ui.lowercase_checkbox, self.ui.numbers_checkbox, self.ui.symbols_checkbox],
             [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
         ):
             if checkbox.checkState() == CheckboxState.CHECKED:
-                selected_characters += char_set
+                selected_characters += character_set
 
         if not selected_characters:
             self.show_info_popup(f'Please select at least one character set.')
