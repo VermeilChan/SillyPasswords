@@ -1,11 +1,11 @@
 CompanyName: VermeilChan
 FileDescription: SillyPasswords
-FileVersion: 1.0.6.0
+FileVersion: 1.0.7.0
 InternalName: SillyPasswords
 LegalCopyright: GPL-3.0.
 OriginalFilename: SillyPasswords.exe
 ProductName: SillyPasswords
-ProductVersion: 1.0.6.0
+ProductVersion: 1.0.7.0
 Translation:
   - langID: 0
     charsetID: 1200
