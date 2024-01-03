@@ -1,5 +1,5 @@
-import string
-import secrets
+from secrets import choice
+from string import ascii_letters, ascii_uppercase, ascii_lowercase, digits, punctuation
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMessageBox
@@ -12,7 +12,7 @@ class PasswordGeneratorLogic:
     DEFAULT_PASSWORD_LENGTH = 12
     MIN_PASSWORD_LENGTH = 1
     MAX_PASSWORD_LENGTH = 4096
-    PASSWORD_CHARACTERS = string.ascii_letters + string.digits + string.punctuation
+    PASSWORD_CHARACTERS = ascii_letters + digits + punctuation
 
     def __init__(self, ui):
         self.ui = ui
@@ -35,16 +35,16 @@ class PasswordGeneratorLogic:
         selected_characters = ''
         for checkbox, character_set in zip(
             [self.ui.uppercase_checkbox, self.ui.lowercase_checkbox, self.ui.numbers_checkbox, self.ui.symbols_checkbox],
-            [string.ascii_uppercase, string.ascii_lowercase, string.digits, string.punctuation]
+            [ascii_uppercase, ascii_lowercase, digits, punctuation]
         ):
             if checkbox.checkState() == CheckboxState.CHECKED:
                 selected_characters += character_set
 
         if not selected_characters:
-            self.show_info_popup(f'Please select at least one character set.')
+            self.show_info_popup('Please select at least one character set.')
             return
 
-        selected_characters = ''.join(secrets.choice(selected_characters) for _ in range(length))
+        selected_characters = ''.join(choice(selected_characters) for _ in range(length))
 
         self.ui.password_output.setText(selected_characters)
 
@@ -54,16 +54,16 @@ class PasswordGeneratorLogic:
     def copy_password(self):
         password = self.ui.password_output.text()
         if not password:
-            self.show_info_popup(f'No password generated. Please generate a password first.')
+            self.show_info_popup('No password generated. Please generate a password first.')
             return
 
         clipboard = QApplication.clipboard()
         clipboard.setText(password)
-        self.show_info_popup(f'Password copied to clipboard.')
+        self.show_info_popup('Password copied to clipboard.')
 
     def show_info_popup(self, message):
         info_popup = QMessageBox(self.ui)
         info_popup.setIcon(QMessageBox.Icon.Information)
         info_popup.setText(message)
-        info_popup.setWindowTitle(f'SillyPasswords')
+        info_popup.setWindowTitle('SillyPasswords')
         info_popup.exec()
