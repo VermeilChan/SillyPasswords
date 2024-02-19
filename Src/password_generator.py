@@ -1,8 +1,8 @@
 from secrets import choice
 from string import ascii_letters, ascii_uppercase, ascii_lowercase, digits, punctuation
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 class CheckboxState:
     CHECKED = Qt.CheckState.Checked

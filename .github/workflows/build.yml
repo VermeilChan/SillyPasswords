@@ -1,0 +1,37 @@
+name: Build SillyPasswords
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4.1.1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.12.2
+
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+
+    - name: Build SillyPasswords
+      run: pyinstaller --noconfirm --onedir --windowed --icon "Assets/Raubtier.ico" --name "SillyPasswords" --clean --version-file "Extra/fileversion.txt" --add-data "Src/about.py;." --add-data "Src/gui.py;." --add-data "Src/password_generator.py;." --add-data "Assets;Assets/"  "Src/main.py"
+
+    - name: Move Assets folder
+      run: |
+        mkdir -p dist/SillyPasswords
+        mv dist/SillyPasswords/_internal/Assets dist/SillyPasswords/
+      shell: bash
+
+    - name: Upload SillyPasswords
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        name: SillyPasswords
+        path: dist/SillyPasswords

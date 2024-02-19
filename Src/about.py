@@ -1,7 +1,7 @@
 from platform import system, version, release, architecture
 
-from PyQt6.QtGui import QPixmap, QIcon
-from PyQt6.QtWidgets import (
+from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QGroupBox,
@@ -41,10 +41,10 @@ class About(QDialog):
         build_info_box = QGroupBox("Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.0.7 (X)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
-        build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
-        build_info_layout.addWidget(QLabel("Build date: Jan 3 2024"))
+        build_info_layout.addWidget(QLabel("Version: 1.0.8 (X)"))
+        build_info_layout.addWidget(QLabel("Pyinstaller: 6.4.0"))
+        build_info_layout.addWidget(QLabel("PySide6: 6.6.2"))
+        build_info_layout.addWidget(QLabel("Build date: Feb 19 2024"))
 
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
@@ -60,7 +60,7 @@ class About(QDialog):
         os_info_box.setLayout(os_info_layout)
         layout.addWidget(os_info_box)
 
-        icon_path = 'Assets/Raubtier.ico'
+        icon_path = 'Assets/Sprite.png'
         self.setWindowIcon(QIcon(icon_path))
 
         build_info_box.setLayout(build_info_layout)

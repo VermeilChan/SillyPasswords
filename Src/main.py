@@ -1,6 +1,6 @@
 from sys import argv, exit
 
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 from gui import PasswordGeneratorUI
 

@@ -1,6 +1,6 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QAction
-from PyQt6.QtWidgets import (
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon, QAction
+from PySide6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
     QPushButton,
@@ -103,5 +103,5 @@ class PasswordGeneratorUI(QMainWindow):
     def set_window_properties(self):
         self.setGeometry(300, 300, 400, 300)
         self.setWindowTitle('SillyPasswords')
-        icon_path = 'Assets/Raubtier.ico'
+        icon_path = 'Assets/Sprite.ico'
         self.setWindowIcon(QIcon(icon_path))
